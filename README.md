@@ -23,3 +23,5 @@ avg(irate(container_cpu_usage_seconds_total{namespace=~"monitoring"}[5m]) * 100)
 - kubectl top node
 
 - kubectl top pods --all-namespaces
+
+- minikube service list
