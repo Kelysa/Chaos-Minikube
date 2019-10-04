@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pacman
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pacman
+  template:
+    metadata:
+      labels:
+        app: pacman
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: pacman
+        image: docker.io/kelysa/pacman:lastest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+            limits:
+              cpu: "0.5"
+            requests:
+              cpu: "0.25"
