@@ -28,7 +28,7 @@ avg(irate(container_cpu_usage_seconds_total{namespace=~"monitoring"}[5m]) * 100)
 
 
 
-Auto-Scaling :
+###Auto-Scaling :
 
 - Check HPA demo live:
 
