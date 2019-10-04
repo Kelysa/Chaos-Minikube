@@ -31,8 +31,11 @@ avg(irate(container_cpu_usage_seconds_total{namespace=~"monitoring"}[5m]) * 100)
 Auto-Scaling :
 
 - Check HPA demo live:
+
         - Open three different terminal
-        - Install `watch` if not installed using `brew install watch`.
+
         - Terminal 1 -> Run `watch -n 1 kubectl get pods`
+
         - Terminal 2 -> Run `watch -n 1 kubectl get hpa`
+
         - Terminal 3 -> Run `ab -c 5 -n 1000 -t 100000 http://192.168.99.100:30001/`	
