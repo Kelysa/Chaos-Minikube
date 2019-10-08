@@ -26,6 +26,10 @@ start:
 	@kubectl apply -f pacman
 	$(call pp,"Pacman URL:")
 	@minikube service pacman --url
+	$(call pp,"starting Octoshield")
+	@kubectl apply -f octoshield
+	$(call pp,"Octoshield URL:")
+	@minikube service octoshield --url
 	$(call pp,"Done...")
 
 PHONY: stop
