@@ -3,7 +3,7 @@ INFO_COLOR=\033[0;33m
 
 PHONY: start
 start:
-	@minikube start 
+	@minikube start
 	$(call pp,"Creating 'monitoring' namespace...")
 	@kubectl create namespace monitoring --context=minikube > /dev/null
 	$(call pp,"Starting Prometheus...")
@@ -21,15 +21,28 @@ start:
 	@kubectl create -f grafana/grafana.yaml -nmonitoring --context=minikube > /dev/null
 	$(call pp,"Grafana URL \(default credentials admin/admin\):")
 	@minikube service --url --namespace=monitoring grafana # Add Prometheus as a datasource http://prometheus:9090 (defaults to admin/admin)
-	$(call pp,"starting pacman")
-	@minikube addons enable metrics-server
-	@kubectl apply -f pacman
-	$(call pp,"Pacman URL:")
-	@minikube service pacman --url
+	
+	
 	$(call pp,"starting Octoshield")
 	@kubectl apply -f octoshield
 	$(call pp,"Octoshield URL:")
 	@minikube service octoshield --url
+	@rm -rf build/config.yml
+	@echo "token: TEST_TOKEN\nserverUrl: $(minikube service octoshield --url)\nenv: PREPROD\ntags:\n  pod: pacman" >> build/config.yml
+	$(call pp,"build pacman")
+	@sudo docker build -t pacman build/ > /dev/null
+	$(call pp,"tag pacman")
+	@sudo docker tag pacman kelysa/pacman:lastest 
+	$(call pp,"push pacman")
+	@sudo docker push kelysa/pacman
+	$(call pp,"starting pacman")
+	@minikube addons enable metrics-server
+	@kubectl create -f pacman/persistentvolume.yml
+	@kubectl create -f pacman/deployment.yml
+	@kubectl create -f pacman/hpa.yml
+	@kubectl create -f pacman/service.yml
+	$(call pp,"Pacman URL:")
+	@minikube service pacman --url
 	$(call pp,"Done...")
 
 PHONY: stop

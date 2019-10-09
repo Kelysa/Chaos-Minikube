@@ -1,0 +1,16 @@
+token: TEST_TOKEN
+serverUrl: http://192.168.99.161:32767
+env: PREPROD
+tags:
+  pod: pacman
+
+#extra options:
+#Agent uuid, if not set, a random uuid will be generated during the first startup
+#uuid:
+
+#Proxy configuration
+#proxy:
+#  url:
+#  username:
+#  password:
+#  insecureSkipVerify: true

@@ -1,0 +1,5 @@
+token: TEST_TOKEN
+serverUrl: 
+env: PREPROD
+tags:
+  pod: pacman
