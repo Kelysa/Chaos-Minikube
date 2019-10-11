@@ -39,3 +39,10 @@ Open three different terminal
 - Terminal 2 :``` watch -n 1 kubectl get hpa ```
 
 - Terminal 3 :```ab -c 5 -n 1000 -t 100000 http://192.168.99.100:30001/```
+
+
+### Cluster Minikube and Octoshield
+
+See all profiles :``` ll ~/.minikube/profiles ```
+
+Change profile : ```minikube profile minikube ```

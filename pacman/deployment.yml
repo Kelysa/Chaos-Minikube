@@ -18,18 +18,15 @@ spec:
         image: docker.io/kelysa/pacman:lastest
         imagePullPolicy: Always
         securityContext:
-          runAsUser: 0
+          privileged: true
+          allowPrivilegeEscalation: true
           capabilities:
-            add: ["NET_ADMIN", "SYS_TIME"]
+            add: ["NET_ADMIN","NET_RAW","KILL","SYS_BOOT","SYS_TIME"]
         ports:
         - containerPort: 80
           # volumeMounts:
           #- mountPath: "/usr/share/nginx/html"
           #name: pacman-pv-claim
-          #lifecycle:
-                #postStart:
-                  #exec:
-                    #command: ["/bin/sh", "-c", "./home/docker/script/octoshield.sh"]
         resources:
             limits:
               cpu: "60"
