@@ -1,14 +1,16 @@
 NO_COLOR=\033[0m
 INFO_COLOR=\033[0;33m
+OCTO=""
+
 
 PHONY: start
-start: octoshield pacman
+start: octoshield snake
 
 
-.PHONY: pacman
-pacman:
-	@minikube start -p pacman
-	@minikube profile pacman
+.PHONY: snake
+snake:
+	@minikube start -p snake
+	@minikube profile snake
 	$(call pp,"Creating 'monitoring' namespace...")
 	@kubectl create namespace monitoring  > /dev/null
 	$(call pp,"Starting Prometheus...")
@@ -29,25 +31,24 @@ pacman:
 	
 	
 	$(call pp,"Octoshield URL:")
-	@minikube service octoshield --url
-	@rm -rf build/config.yml
+	@rm -rf build/octoshield/config.yml
 	@minikube profile octoshield 
-	@echo "token: TEST_TOKEN\nserverUrl: $(minikube service octoshield --url)\nenv: PREPROD\ntags:\n  pod: pacman" >> build/octoshield/config.yml
-	$(call pp,"build pacman")
-	minikube profile pacman
-	@sudo docker build -t pacman build/ > /dev/null
-	$(call pp,"tag pacman")
-	@sudo docker tag pacman kelysa/pacman:lastest 
-	$(call pp,"push pacman")
-	@sudo docker push kelysa/pacman
-	$(call pp,"starting pacman")
+	$(call pp,"$(OCTO)")
+	@echo "token: TEST_TOKEN\nserverUrl: $(echo $OCTO) \nenv: PREPROD\ntags:\n  pod: snake" >> build/octoshield/config.yml
+	$(call pp,"build snake")
+	minikube profile snake
+	@sudo docker build -t snake build/ > /dev/null
+	$(call pp,"tag snake")
+	@sudo docker tag snake kelysa/snake:lastest 
+	$(call pp,"push snake")
+	@sudo docker push kelysa/snake
+	$(call pp,"starting snake")
 	@minikube addons enable metrics-server
-	@kubectl create -f pacman/persistentvolume.yml
-	@kubectl create -f pacman/deployment.yml
-	@kubectl create -f pacman/hpa.yml
-	@kubectl create -f pacman/service.yml
+	@kubectl create -f snake/deployment.yml
+	@kubectl create -f snake/hpa.yml
+	@kubectl create -f snake/service.yml
 	$(call pp,"Pacman URL:")
-	@minikube service pacman --url
+	@minikube service snake --url
 	$(call pp,"Done...")
 
 .PHONY: octoshield
@@ -57,15 +58,28 @@ octoshield:
 	$(call pp,"starting Octoshield")
 	@kubectl apply -f octoshield
 	$(call pp,"Octoshield URL:")
-	@minikube service octoshield --url
+	@minikube service octoshield --url 
+	@OCTO=$(@minikube service octoshield --url)
+
+
+.PHONY: gremlin
+gremlin:
+	@kubectl create secret generic gremlin-team-cert --from-file=./gremlin/gremlin.cert --from-file=./gremlin/gremlin.key
+	@kubectl -n kube-system create serviceaccount tiller
+	@kubectl create clusterrolebinding tiller \
+  --clusterrole=cluster-admin \
+  --serviceaccount=kube-system:tiller
+	@helm init --service-account tiller --output yaml | sed 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' | sed 's@  replicas: 1@  replicas: 1\n  selector: {"matchLabels": {"app": "helm", "name": "tiller"}}@' | kubectl apply -f -
+	@helm repo add gremlin https://helm.gremlin.com
+	@helm install --set gremlin.teamID=2513549e-e90d-5a61-90f1-f9f6afcda8c8 gremlin/gremlin
 
 
 PHONY: stop
 stop:
+	$(call pp,"Deleting snake cluster")
+	@minikube delete -p snake
 	$(call pp,"Deleting octoshield cluster")
-	@ minikube delete -p octoshield
-	$(call pp,"Deleting pacman cluster")
-	@ minikube delete -p pacman
+	@ minikube delete -p octoshiel
 	@minikube delete
 	$(call pp,"Done...")
 

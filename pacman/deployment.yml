@@ -21,7 +21,7 @@ spec:
           privileged: true
           allowPrivilegeEscalation: true
           capabilities:
-            add: ["NET_ADMIN","NET_RAW","KILL","SYS_BOOT","SYS_TIME"]
+            add: ["NET_ADMIN","NET_RAW","KILL","SYS_BOOT","SYS_TIME","SYS_ADMIN","NET_BROADCAST"]
         ports:
         - containerPort: 80
           # volumeMounts:

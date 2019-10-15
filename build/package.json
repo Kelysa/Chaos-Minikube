@@ -1,15 +1,26 @@
 {
-  "name": "pacman",
+  "name": "snake",
   "version": "1.0.0",
-  "private": true,
-  "description": "test",
-  "main": "pacman.js",
-  "dependencies": {
-    "express": "^4.17.1"
-  },
+  "description": "Realtime multiplayer browser snake game built with Node.js and Socket.IO and rendered to an HTML5 canvas.",
+  "main": "app.js",
   "scripts": {
-    "start": "node pacman.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Saeed Osman",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "lodash": "^4.17.4",
+    "socketio": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saeedosman/multiplayer-snake.git"
+  },
+  "bugs": {
+    "url": "https://github.com/saeedosman/multiplayer-snake/issues"
+  },
+  "homepage": "https://github.com/saeedosman/multiplayer-snake#readme",
+  "devDependencies": {}
 }
