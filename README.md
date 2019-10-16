@@ -9,6 +9,16 @@ Delete all previously created resources:
 make stop
 ```
 
+Command for a general view:
+```bash
+kubectl get all --all-namespaces
+```
+
+view all services:
+```bash
+minikube service list
+```
+
 Wait 2-3 minute before using minikube dashboard
 
 ## Configure Grafana
@@ -19,13 +29,6 @@ avg(irate(container_cpu_usage_seconds_total{namespace=~"monitoring"}[5m]) * 100)
 ```
 
 - kubectl describe node minikube
-
-- kubectl top node
-
-- kubectl top pods --all-namespaces
-
-- minikube service list
-
 
 
 ### Auto-Scaling

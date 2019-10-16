@@ -34,7 +34,7 @@ snake:
 	@rm -rf build/octoshield/config.yml
 	@minikube profile octoshield 
 	$(call pp,"$(OCTO)")
-	@echo "token: TEST_TOKEN\nserverUrl: $(echo $OCTO) \nenv: PREPROD\ntags:\n  pod: snake" >> build/octoshield/config.yml
+	@echo "token: TEST_TOKEN\nserverUrl: $(shell minikube service octoshield --url) \nenv: PREPROD\ntags:\n  pod: snake" >> build/octoshield/config.yml
 	$(call pp,"build snake")
 	minikube profile snake
 	@sudo docker build -t snake build/ > /dev/null
@@ -59,8 +59,6 @@ octoshield:
 	@kubectl apply -f octoshield
 	$(call pp,"Octoshield URL:")
 	@minikube service octoshield --url 
-	@OCTO=$(@minikube service octoshield --url)
-
 
 .PHONY: gremlin
 gremlin:
@@ -72,7 +70,6 @@ gremlin:
 	@helm init --service-account tiller --output yaml | sed 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' | sed 's@  replicas: 1@  replicas: 1\n  selector: {"matchLabels": {"app": "helm", "name": "tiller"}}@' | kubectl apply -f -
 	@helm repo add gremlin https://helm.gremlin.com
 	@helm install --set gremlin.teamID=2513549e-e90d-5a61-90f1-f9f6afcda8c8 gremlin/gremlin
-
 
 PHONY: stop
 stop:
