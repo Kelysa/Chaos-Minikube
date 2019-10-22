@@ -9,8 +9,8 @@ start: octoshield snake
 
 .PHONY: snake
 snake:
-	@minikube start -p snake
-	@minikube profile snake
+	@minikube start -p Snake
+	@minikube profile Snake
 	$(call pp,"Creating 'monitoring' namespace...")
 	@kubectl create namespace monitoring  > /dev/null
 	$(call pp,"Starting Prometheus...")
@@ -32,29 +32,29 @@ snake:
 	
 	$(call pp,"Octoshield URL:")
 	@rm -rf build/octoshield/config.yml
-	@minikube profile octoshield 
+	@minikube profile Octoshield > /dev/null
 	$(call pp,"$(OCTO)")
 	@echo "token: TEST_TOKEN\nserverUrl: $(shell minikube service octoshield --url) \nenv: PREPROD\ntags:\n  pod: snake" >> build/octoshield/config.yml
 	$(call pp,"build snake")
-	minikube profile snake
+	minikube profile Snake > /dev/null
 	@sudo docker build -t snake build/ > /dev/null
 	$(call pp,"tag snake")
-	@sudo docker tag snake kelysa/snake:lastest 
+	@sudo docker tag snake kelysa/snake:lastest > /dev/null
 	$(call pp,"push snake")
-	@sudo docker push kelysa/snake
+	@sudo docker push kelysa/snake > /dev/null
 	$(call pp,"starting snake")
-	@minikube addons enable metrics-server
-	@kubectl create -f snake/deployment.yml
-	@kubectl create -f snake/hpa.yml
-	@kubectl create -f snake/service.yml
+	@minikube addons enable metrics-server > /dev/null
+	@kubectl create -f snake/deployment.yml > /dev/null
+	@kubectl create -f snake/hpa.yml > /dev/null
+	@kubectl create -f snake/service.yml > /dev/null
 	$(call pp,"Pacman URL:")
 	@minikube service snake --url
 	$(call pp,"Done...")
 
 .PHONY: octoshield
 octoshield:
-	@minikube start -p octoshield
-	minikube profile octoshield
+	@minikube start -p Octoshield
+	minikube profile Octoshield > /dev/null
 	$(call pp,"starting Octoshield")
 	@kubectl apply -f octoshield
 	$(call pp,"Octoshield URL:")
@@ -73,10 +73,9 @@ gremlin:
 
 PHONY: stop
 stop:
-	$(call pp,"Deleting snake cluster")
-	@minikube delete -p snake
-	$(call pp,"Deleting octoshield cluster")
-	@ minikube delete -p octoshiel
+	$(call pp,"Deleting snake and octoshield cluster")
+	@minikube delete 
+	@minikube profile Octoshield
 	@minikube delete
 	$(call pp,"Done...")
 

@@ -35,6 +35,8 @@ avg(irate(container_cpu_usage_seconds_total{namespace=~"monitoring"}[5m]) * 100)
 
 - Check HPA demo live:
 
+Change snake/hpa.yml -> maxreplica 
+
 Open three different terminal
 
 - Terminal 1 :``` watch -n 1 kubectl get pods ```
